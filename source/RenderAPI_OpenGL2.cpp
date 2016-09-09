@@ -17,8 +17,6 @@ public:
 
 	virtual void ProcessDeviceEvent(UnityGfxDeviceEventType type, IUnityInterfaces* interfaces);
 
-	virtual void DrawSimpleTriangles(const float worldMatrix[16], int triangleCount, const void* verticesFloat3Byte4);
-
 	virtual void* BeginModifyTexture(void* textureHandle, int textureWidth, int textureHeight, int* outRowPitch);
 	virtual void EndModifyTexture(void* textureHandle, int textureWidth, int textureHeight, int rowPitch, void* dataPtr);
 };
@@ -39,46 +37,6 @@ void RenderAPI_OpenGL2::ProcessDeviceEvent(UnityGfxDeviceEventType type, IUnityI
 {
 	// not much to do :)
 }
-
-
-void RenderAPI_OpenGL2::DrawSimpleTriangles(const float worldMatrix[16], int triangleCount, const void* verticesFloat3Byte4)
-{
-	// Note: for simplicity, we'll use fixed function pipeline to draw the geometry
-
-	// Set basic render state
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_LIGHTING);
-	glDisable(GL_BLEND);
-	glDisable(GL_ALPHA_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_FALSE);
-
-	// Transformation matrices
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(worldMatrix);
-	glMatrixMode(GL_PROJECTION);
-	// Tweak the projection matrix a bit to make it match what identity
-	// projection would do in D3D case.
-	float projectionMatrix[16] = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,2,0,
-		0,0,-1,1,
-	};
-	glLoadMatrixf(projectionMatrix);
-
-	// Vertex layout
-	const int kVertexSize = 12 + 4;
-	glVertexPointer(3, GL_FLOAT, kVertexSize, verticesFloat3Byte4);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glColorPointer(4, GL_UNSIGNED_BYTE, kVertexSize, (const char*)verticesFloat3Byte4 + 12);
-	glEnableClientState(GL_COLOR_ARRAY);
-
-	// Draw
-	glDrawArrays(GL_TRIANGLES, 0, triangleCount * 3);
-}
-
 
 void* RenderAPI_OpenGL2::BeginModifyTexture(void* textureHandle, int textureWidth, int textureHeight, int* outRowPitch)
 {

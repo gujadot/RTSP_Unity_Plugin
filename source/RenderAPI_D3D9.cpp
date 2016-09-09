@@ -18,8 +18,6 @@ public:
 
 	virtual void ProcessDeviceEvent(UnityGfxDeviceEventType type, IUnityInterfaces* interfaces);
 
-	virtual void DrawSimpleTriangles(const float worldMatrix[16], int triangleCount, const void* verticesFloat3Byte4);
-
 	virtual void* BeginModifyTexture(void* textureHandle, int textureWidth, int textureHeight, int* outRowPitch);
 	virtual void EndModifyTexture(void* textureHandle, int textureWidth, int textureHeight, int rowPitch, void* dataPtr);
 
@@ -66,53 +64,6 @@ void RenderAPI_D3D9::ProcessDeviceEvent(UnityGfxDeviceEventType type, IUnityInte
 	}
 }
 
-
-void RenderAPI_D3D9::DrawSimpleTriangles(const float worldMatrix[16], int triangleCount, const void* verticesFloat3Byte4)
-{
-	// Note: for simplicity, we'll use D3D9 fixed function pipeline to draw the geometry
-
-	// Set basic render state
-	m_Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_Device->SetRenderState(D3DRS_LIGHTING, FALSE);
-	m_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	m_Device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-	m_Device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-	m_Device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
-	// Transformation matrices
-	m_Device->SetTransform(D3DTS_WORLD, (const D3DMATRIX*)worldMatrix);
-	float identityMatrix[16] = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1,
-	};
-	m_Device->SetTransform(D3DTS_VIEW, (const D3DMATRIX*)identityMatrix);
-	m_Device->SetTransform(D3DTS_PROJECTION, (const D3DMATRIX*)identityMatrix);
-
-	// Vertex layout
-	const int kVertexSize = 12 + 4; // position + color
-	m_Device->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
-
-	// Texture stage states to output vertex color
-	m_Device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-	m_Device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_CURRENT);
-	m_Device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-	m_Device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_CURRENT);
-	m_Device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-	m_Device->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
-
-	// Copy vertex data into our small dynamic vertex buffer. We could have used
-	// DrawPrimitiveUP just fine as well.
-	void* vbPtr;
-	m_DynamicVB->Lock(0, 0, &vbPtr, D3DLOCK_DISCARD);
-	memcpy(vbPtr, verticesFloat3Byte4, triangleCount * 3 * kVertexSize);
-	m_DynamicVB->Unlock();
-	m_Device->SetStreamSource(0, m_DynamicVB, 0, kVertexSize);
-
-	// Draw
-	m_Device->DrawPrimitive(D3DPT_TRIANGLELIST, 0, triangleCount);
-}
 
 
 void* RenderAPI_D3D9::BeginModifyTexture(void* textureHandle, int textureWidth, int textureHeight, int* outRowPitch)
