@@ -12,15 +12,15 @@ namespace rtsp_unity_plugin {
 	class FFMpegStream;
 	class MediaSink;
 
-	class FFMpegClass
+	class RTSPPluginSingleton
 	{
 
 	private:
-		FFMpegClass();
-		~FFMpegClass();
+		RTSPPluginSingleton();
+		~RTSPPluginSingleton();
 
 	public:
-		static FFMpegClass& Instance();
+		static RTSPPluginSingleton& Instance();
 
 		void InitAv();
 		void InitAvNetwork();
@@ -48,7 +48,7 @@ namespace rtsp_unity_plugin {
 
 	private:
 
-		static FFMpegClass m_instance;
+		static RTSPPluginSingleton m_instance;
 		//TODO use many stream?
 		//std::set<FFMpegStream> m_vStream;
 

@@ -2,13 +2,13 @@
 #include "Unity/IUnityGraphics.h"
 #include <assert.h>
 
-#include "FFMpegClass.h"
+#include "RTSPUnityPluginSingleton.h"
 #include "UnityTextureSink.h"
 
 // Frome Example : --------------------------------------------------------------------------
 // SetTimeFromUnity, an example function we export which is called by one of the scripts.
 
-rtsp_unity_plugin::FFMpegClass& ffmpegClassPtr = rtsp_unity_plugin::FFMpegClass::Instance();
+rtsp_unity_plugin::RTSPPluginSingleton& ffmpegClassPtr = rtsp_unity_plugin::RTSPPluginSingleton::Instance();
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTimeFromUnity(float t) { ffmpegClassPtr.setTime(t); }
 
 // --------------------------------------------------------------------------

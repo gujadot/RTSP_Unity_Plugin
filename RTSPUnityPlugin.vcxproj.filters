@@ -25,9 +25,6 @@
     <ClCompile Include="source\RTSPUnityPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\FFMpegClass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\FFMpegStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,6 +53,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\RenderAPI_OpenGLCoreES.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RTSPUnityPluginSingleton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,9 +87,6 @@
     <ClInclude Include="source\GLEW\wglew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\FFMpegClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\FFMpegStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -112,6 +109,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\PlatformBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\RTSPUnityPluginSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

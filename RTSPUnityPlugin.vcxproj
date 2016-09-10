@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\FFMpegClass.cpp" />
+    <ClCompile Include="source\RTSPUnityPluginSingleton.cpp" />
     <ClCompile Include="source\FFMpegRTSPStream.cpp" />
     <ClCompile Include="source\FFMpegStream.cpp" />
     <ClCompile Include="source\GLEW\glew.c" />
@@ -34,7 +34,7 @@
     <ClCompile Include="source\UnityTextureSink.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\FFMpegClass.h" />
+    <ClInclude Include="source\RTSPUnityPluginSingleton.h" />
     <ClInclude Include="source\ffmpegenv.h" />
     <ClInclude Include="source\FFMpegRTSPStream.h" />
     <ClInclude Include="source\FFMpegStream.h" />

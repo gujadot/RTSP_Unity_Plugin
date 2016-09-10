@@ -1,5 +1,5 @@
 #include "UnityTextureSink.h"
-#include "FFMpegClass.h"
+#include "RTSPUnityPluginSingleton.h"
 
 rtsp_unity_plugin::UnityTextureSink::UnityTextureSink(void* textureHandle, const char * id, int height, int width)
 	: MediaSink(height,width, AV_PIX_FMT_RGBA)
@@ -32,7 +32,7 @@ void rtsp_unity_plugin::UnityTextureSink::draw_plasma(RenderAPI* render_api) {
 	if (!textureDataPtr)
 		return;
 
-	rtsp_unity_plugin::FFMpegClass& ffmpegClassPtr = rtsp_unity_plugin::FFMpegClass::Instance();
+	rtsp_unity_plugin::RTSPPluginSingleton& ffmpegClassPtr = rtsp_unity_plugin::RTSPPluginSingleton::Instance();
 	const float t = ffmpegClassPtr.getTime() *4.0f;
 
 	unsigned char* dst = (unsigned char*)textureDataPtr;

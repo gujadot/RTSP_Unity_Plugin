@@ -1,5 +1,5 @@
 #include "FFMpegRTSPStream.h"
-#include "FFMpegClass.h"
+#include "RTSPUnityPluginSingleton.h"
 
 
 
@@ -18,7 +18,7 @@ rtsp_unity_plugin::FFMpegRTSPStream::~FFMpegRTSPStream()
 int rtsp_unity_plugin::FFMpegRTSPStream::InitStream()
 {
 	// init libav, codec and network
-	FFMpegClass& ffmpegInstance = FFMpegClass::Instance();
+	RTSPPluginSingleton& ffmpegInstance = RTSPPluginSingleton::Instance();
 	ffmpegInstance.InitAv();
 	ffmpegInstance.InitAvCodec();
 	ffmpegInstance.InitAvNetwork();

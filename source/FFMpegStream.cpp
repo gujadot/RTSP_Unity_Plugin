@@ -1,5 +1,5 @@
 #include "FFMpegStream.h"
-#include "FFMpegClass.h"
+#include "RTSPUnityPluginSingleton.h"
 
 
 
@@ -42,7 +42,7 @@ int rtsp_unity_plugin::FFMpegStream::addMediaSink(MediaSink &media_sink)
 */
 int rtsp_unity_plugin::FFMpegStream::ReadFrame() 
 {
-	FFMpegClass& ffmpegClassPtr = FFMpegClass::Instance();
+	RTSPPluginSingleton& ffmpegClassPtr = RTSPPluginSingleton::Instance();
 	//if (m_pMediaSink != NULL)
 	//	m_pMediaSink->WriteVideo(ffmpegClassPtr.getRenderApi(),  NULL);
 	
