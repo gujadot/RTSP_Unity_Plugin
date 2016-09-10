@@ -1,27 +1,6 @@
 #include "MediaSink.h"
 
 
-/**
-// TODO INIT THE SINK HERE! 
-// set the dst size frame to default if necessary : 
-if (m_dstHeight == 0 && m_dstWidth == 0) {
-	m_dstHeight = m_pCodecCtx->height;
-	m_dstWidth = m_pCodecCtx->width;
-}
-
-
-// Determine required buffer size and allocate buffer
-uint8_t *buffer = NULL;
-int numBytes;
-numBytes = av_image_get_buffer_size(AV_PIX_FMT_YUV420P, m_pCodecCtx->width, m_pCodecCtx->height, 1);
-buffer = (uint8_t *)av_malloc(numBytes * sizeof(uint8_t));
-
-
-
-
-
-*/
-
 rtsp_unity_plugin::MediaSink::MediaSink(int height, int width, AVPixelFormat format)
 {
 	m_Height = height;

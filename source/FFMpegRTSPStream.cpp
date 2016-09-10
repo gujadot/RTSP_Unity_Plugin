@@ -2,9 +2,9 @@
 
 
 
-rtsp_unity_plugin::FFMpegRTSPStream::FFMpegRTSPStream(const char* uri)
+rtsp_unity_plugin::FFMpegRTSPStream::FFMpegRTSPStream(const char* uri) :
+	FFMpegStream(uri)
 {
-	m_RTSPUri = uri;
 	InitStream();
 }
 
@@ -17,14 +17,15 @@ rtsp_unity_plugin::FFMpegRTSPStream::~FFMpegRTSPStream()
 int rtsp_unity_plugin::FFMpegRTSPStream::InitStream()
 {
 	// init libav, codec and network
-	FFMpegClass::InitAv;
-	FFMpegClass::InitAvCodec;
-	FFMpegClass::InitAvNetwork;
+	FFMpegClass& ffmpegInstance = FFMpegClass::Instance();
+	ffmpegInstance.InitAv();
+	ffmpegInstance.InitAvCodec();
+	ffmpegInstance.InitAvNetwork();
 
 	AVCodecParameters *pCodecPar = NULL;
 	m_pFormatCtx = avformat_alloc_context();
 	//get context and format 
-	avformat_open_input(&m_pFormatCtx, m_RTSPUri , NULL, NULL);
+	avformat_open_input(&m_pFormatCtx, m_pStreamUri , NULL, NULL);
 	avformat_find_stream_info(m_pFormatCtx, NULL);
 	//search video stream
 
@@ -42,7 +43,7 @@ int rtsp_unity_plugin::FFMpegRTSPStream::InitStream()
 	}
 
 	//init packet
-	av_init_packet(&m_Packet);
+	av_init_packet(&m_packet);
 
 	//play RTSP
 	av_read_play(m_pFormatCtx);

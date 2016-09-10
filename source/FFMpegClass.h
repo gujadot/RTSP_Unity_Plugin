@@ -1,8 +1,11 @@
 #pragma once
 
 #include "ffmpegenv.h"
+#include <set>
+#include "FFMpegStream.h"
 
 namespace rtsp_unity_plugin {
+	class FFMpegStream;
 
 	class FFMpegClass
 	{
@@ -13,20 +16,32 @@ namespace rtsp_unity_plugin {
 
 	public:
 		static FFMpegClass& Instance();
+
 		void InitAv();
 		void InitAvNetwork();
 		void InitAvCodec();
+
+		//TODO not used
+		//void AddNewRtspStream(const char* uri);
+
+		void SetRtspStream(const char* uri);
+
+		//void ReadFrames();
+		void ReadFrame();
 
 		inline bool hasInitAv() { return m_hasInitAv; };
 		inline bool hasInitAvCodec() { return m_hasInitAvCodec; };
 		inline bool hasInitAvNetwork() { return m_hasInitAvNetwork; };
 
+		FFMpegStream* getStream() { return m_pStream; };
+
 	private:
 
 		static FFMpegClass m_instance;
-		FFMpegClass();
-		~FFMpegClass();
+		//TODO use many stream?
+		//std::set<FFMpegStream> m_vStream;
 
+		FFMpegStream* m_pStream;
 
 		bool m_hasInitAvCodec;
 		bool m_hasInitAv;

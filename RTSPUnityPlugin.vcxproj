@@ -23,16 +23,29 @@
     <ClCompile Include="source\FFMpegRTSPStream.cpp" />
     <ClCompile Include="source\FFMpegStream.cpp" />
     <ClCompile Include="source\GLEW\glew.c" />
+    <ClCompile Include="source\MediaSink.cpp" />
+    <ClCompile Include="source\RenderAPI.cpp" />
+    <ClCompile Include="source\RenderAPI_D3D11.cpp" />
+    <ClCompile Include="source\RenderAPI_D3D12.cpp" />
+    <ClCompile Include="source\RenderAPI_D3D9.cpp" />
+    <ClCompile Include="source\RenderAPI_OpenGL2.cpp" />
+    <ClCompile Include="source\RenderAPI_OpenGLCoreES.cpp" />
     <ClCompile Include="source\RTSPUnityPlugin.cpp" />
+    <ClCompile Include="source\UnityTextureSink.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\FFMpegClass.h" />
+    <ClInclude Include="source\ffmpegenv.h" />
     <ClInclude Include="source\FFMpegRTSPStream.h" />
     <ClInclude Include="source\FFMpegStream.h" />
     <ClInclude Include="source\GLEW\glew.h" />
     <ClInclude Include="source\GLEW\glxew.h" />
     <ClInclude Include="source\GLEW\wglew.h" />
-    <ClInclude Include="source\PlateformeBase.h" />
+    <ClInclude Include="source\MediaSink.h" />
+    <ClInclude Include="source\PlatformBase.h" />
+    <ClInclude Include="source\RenderAPI.h" />
+    <ClInclude Include="source\unityenv.h" />
+    <ClInclude Include="source\UnityTextureSink.h" />
     <ClInclude Include="source\Unity\IUnityGraphics.h" />
     <ClInclude Include="source\Unity\IUnityGraphicsD3D11.h" />
     <ClInclude Include="source\Unity\IUnityGraphicsD3D12.h" />

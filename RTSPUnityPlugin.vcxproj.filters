@@ -34,6 +34,30 @@
     <ClCompile Include="source\FFMpegRTSPStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\MediaSink.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UnityTextureSink.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RenderAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RenderAPI_D3D9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RenderAPI_D3D11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RenderAPI_D3D12.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RenderAPI_OpenGL2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\RenderAPI_OpenGLCoreES.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Unity\IUnityGraphics.h">
@@ -63,9 +87,6 @@
     <ClInclude Include="source\GLEW\wglew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\PlateformeBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\FFMpegClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -73,6 +94,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\FFMpegRTSPStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ffmpegenv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\MediaSink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UnityTextureSink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\unityenv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\RenderAPI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PlatformBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

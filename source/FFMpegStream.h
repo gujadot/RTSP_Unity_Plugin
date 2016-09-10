@@ -1,16 +1,19 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
 #include "FFMpegClass.h"
 #include "MediaSink.h"
+#include <string>;
 
 namespace rtsp_unity_plugin {
+	class MediaSink;
+
+
 	class FFMpegStream
 	{
 
 	protected:
-		AVFormatContext* m_pFormatCtx NULL;
+		AVFormatContext* m_pFormatCtx= NULL;
 		AVCodecContext *m_pCodecCtx = NULL;
 		AVCodec *m_pCodec = NULL;
 		AVFrame *m_pFrameSrc = NULL;
@@ -19,7 +22,7 @@ namespace rtsp_unity_plugin {
 		int m_dstHeight = 0;
 		int m_frameFinished;
 
-		char* m_pStreamUri;
+		const char* m_pStreamUri;
 
 		AVPacket m_packet;
 
@@ -29,27 +32,36 @@ namespace rtsp_unity_plugin {
 		bool m_hasInit = false;
 		bool m_isClosed = false;
 
-		std::vector<MediaSink> m_vMediaSink;
+		MediaSink* m_pMediaSink;
+		//std::vector<MediaSink> m_vMediaSink;
 
 	public:
-		FFMpegStream();
+		FFMpegStream(const char* uri);
 		~FFMpegStream();
 
-		virtual int InitStream(); // return 0 if ok
-		virtual int CloseStream(); // return 0 if ok, 1 if not yet init, 2 if already closed 
-
+		virtual int InitStream() = 0; // return 0 if ok
+		virtual int CloseStream() = 0; // return 0 if ok, 1 if not yet init, 2 if already closed 
+		
 		inline AVCodecContext *getCodecContext() { return m_pCodecCtx; }
 		inline bool hasInit() { return m_hasInit; }
 		inline bool isClosed() { return m_isClosed; }
+		//int addMediaSink(MediaSink &media_sink);
+		int setMediaSink(MediaSink* media_sink);
 
-		int addMediaSink(MediaSink &media_sink);
-
-	protected:
+		const char* getUri() const;
 
 		int ReadFrame();
+
+	protected:
 
 	private:
 
 	
 	};
+	/*
+	struct FFMpegStreamCompare {
+		bool operator() (const FFMpegStream& lhs, const FFMpegStream& rhs) const {
+			return strcmp(lhs.getUri(), rhs.getUri()) < 0;
+		}
+	};*/
 }

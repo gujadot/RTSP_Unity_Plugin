@@ -13,9 +13,7 @@ namespace rtsp_unity_plugin {
 		
 		int InitStream();
 		int CloseStream();
-
-		const char* m_RTSPUri;
-
+		
 	};
 
 }

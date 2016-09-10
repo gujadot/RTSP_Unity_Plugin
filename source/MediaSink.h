@@ -1,7 +1,8 @@
 #pragma once
-
-
 #include "FFMpegClass.h"
+
+
+
 namespace rtsp_unity_plugin {
 
 	class MediaSink
@@ -27,8 +28,8 @@ namespace rtsp_unity_plugin {
 
 		int setSrcCodecContext(AVCodecContext * p_src_codec_context);
 
-		virtual int WriteAudio(AVFrame* audio_frame);
-		virtual int WriteVideo(AVFrame* Video_frame);
+		virtual int WriteAudio(AVFrame* audio_frame) = 0;
+		virtual int WriteVideo(AVFrame* Video_frame) = 0;
 		
 	};
 }
