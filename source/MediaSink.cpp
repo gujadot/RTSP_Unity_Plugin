@@ -31,6 +31,7 @@ rtsp_unity_plugin::MediaSink::~MediaSink()
 
 int rtsp_unity_plugin::MediaSink::setSrcCodecContext(AVCodecContext * p_src_codec_context)
 {
+
 	m_pSrcCodecContext = p_src_codec_context;
 	// initialize SWS context for software scaling
 	//NOTE: this function is to be removed after a saner alternative is written
@@ -46,6 +47,7 @@ int rtsp_unity_plugin::MediaSink::setSrcCodecContext(AVCodecContext * p_src_code
 		NULL,
 		NULL
 	);
+	m_hasInit = true;
 
 	return 0;
 }

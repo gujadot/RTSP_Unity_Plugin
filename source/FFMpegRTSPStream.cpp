@@ -18,16 +18,22 @@ rtsp_unity_plugin::FFMpegRTSPStream::~FFMpegRTSPStream()
 int rtsp_unity_plugin::FFMpegRTSPStream::InitStream()
 {
 	// init libav, codec and network
-	RTSPPluginSingleton& ffmpegInstance = RTSPPluginSingleton::Instance();
-	ffmpegInstance.InitAv();
-	ffmpegInstance.InitAvCodec();
-	ffmpegInstance.InitAvNetwork();
+	RTSPPluginSingleton& rtspPluginSinglet = RTSPPluginSingleton::Instance();
+	rtspPluginSinglet.InitAv();
+	rtspPluginSinglet.InitAvCodec();
+	rtspPluginSinglet.InitAvNetwork();
 
 	AVCodecParameters *pCodecPar = NULL;
 	m_pFormatCtx = avformat_alloc_context();
 	//get context and format 
-	avformat_open_input(&m_pFormatCtx, m_pStreamUri , NULL, NULL);
-	avformat_find_stream_info(m_pFormatCtx, NULL);
+	if (avformat_open_input(&m_pFormatCtx, m_pStreamUri, NULL, NULL) < 0) {
+		avformat_free_context(m_pFormatCtx);
+		return -1; // error, init faild, return -1
+	}
+	if (avformat_find_stream_info(m_pFormatCtx, NULL)) {
+		avformat_free_context(m_pFormatCtx);
+		return -2;// error, codec not found, return -2
+	}
 	//search video stream
 
 	for (int i = 0; i<m_pFormatCtx->nb_streams; i++)
@@ -67,8 +73,8 @@ int rtsp_unity_plugin::FFMpegRTSPStream::InitStream()
 	if (avcodec_open2(m_pCodecCtx, m_pCodec, NULL)<0)
 		return -1; // Could not open codec
 
-	// Allocate video frame
-	// Allocate an AVFrame structure
+				   // Allocate video frame
+				   // Allocate an AVFrame structure
 	m_pFrameSrc = av_frame_alloc();
 
 	m_hasInit = true;

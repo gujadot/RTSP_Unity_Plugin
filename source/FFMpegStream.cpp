@@ -14,11 +14,18 @@ rtsp_unity_plugin::FFMpegStream::FFMpegStream(const char* uri)
 rtsp_unity_plugin::FFMpegStream::~FFMpegStream()
 {
 }
+/*
+	return -1 if the stream as not been set yet.
+
+*/
 int rtsp_unity_plugin::FFMpegStream::setMediaSink(MediaSink* media_sink)
 {
-	media_sink->setSrcCodecContext(m_pCodecCtx);
-	m_pMediaSink = media_sink;
-	return 0;
+	if (hasInit()){
+		media_sink->setSrcCodecContext(m_pCodecCtx);
+		m_pMediaSink = media_sink;
+		return 0;
+	}
+	return -1;
 }
 
 const char * rtsp_unity_plugin::FFMpegStream::getUri() const

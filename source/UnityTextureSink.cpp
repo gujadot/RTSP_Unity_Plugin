@@ -20,6 +20,7 @@ int rtsp_unity_plugin::UnityTextureSink::WriteAudio(AVFrame * audio_frame)
 	//TODO : not yet implemented
 	return 0;
 }
+//to test texture manipulation
 void rtsp_unity_plugin::UnityTextureSink::draw_plasma(RenderAPI* render_api) {
 
 	int width = m_Width;
@@ -69,12 +70,10 @@ void rtsp_unity_plugin::UnityTextureSink::draw_plasma(RenderAPI* render_api) {
 int rtsp_unity_plugin::UnityTextureSink::WriteVideo(RenderAPI* render_api, AVFrame * Video_frame)
 {
 
-	
 	int test = 0;
 
 	//draw_plasma(render_api);
 	//return 0;
-
 
 	if (!m_pTextureHandle)
 		return -2;
@@ -96,7 +95,7 @@ int rtsp_unity_plugin::UnityTextureSink::WriteVideo(RenderAPI* render_api, AVFra
 		return -1;
 
 	unsigned char* dst = (unsigned char*)textureDataPtr;
-	unsigned char* src = (unsigned char*)m_pFrameDst->data[0];
+	unsigned char* src = (unsigned char*)m_pFrameDst->data[0] + m_pFrameDst->linesize[0] - 1;
 
 	for (int y = 0; y < m_Height; ++y)
 	{
@@ -114,7 +113,7 @@ int rtsp_unity_plugin::UnityTextureSink::WriteVideo(RenderAPI* render_api, AVFra
 
 			// To next pixel (our pixels are 4 bpp)
 			ptr_dst += 4;
-			ptr_src += 4;
+			ptr_src -= 4;
 		}
 		// To next image row
 		dst += textureRowPitch;
