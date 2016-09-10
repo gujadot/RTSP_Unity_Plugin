@@ -6,6 +6,8 @@ rtsp_unity_plugin::MediaSink::MediaSink(int height, int width, AVPixelFormat for
 	m_Height = height;
 	m_Width = width;
 	m_dstFormat = format;
+	// Allocate an AVFrame structure
+	m_pFrameDst = av_frame_alloc();
 
 	int numBytes;
 	// Determine required buffer size and allocate buffer

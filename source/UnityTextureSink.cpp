@@ -4,8 +4,9 @@
 
 
 rtsp_unity_plugin::UnityTextureSink::UnityTextureSink(void* textureHandle, const char * id, int height, int width)
-	: MediaSink(height,width,AV_PIX_FMT_RGB32)
+	: MediaSink(height,width, AV_PIX_FMT_YUYV422)
 {
+	//AV_PIX_FMT_ARGB != textureformat ARGB32
 	m_id = id;
 	m_pTextureHandle = textureHandle;
 
@@ -23,6 +24,7 @@ int rtsp_unity_plugin::UnityTextureSink::WriteAudio(AVFrame * audio_frame)
 
 int rtsp_unity_plugin::UnityTextureSink::WriteVideo(AVFrame * Video_frame)
 {
+	
 	// get all information need 
 	if (!m_pTextureHandle)
 		return -1;
@@ -43,6 +45,6 @@ int rtsp_unity_plugin::UnityTextureSink::WriteVideo(AVFrame * Video_frame)
 	textureDataPtr = (void*)m_pFrameDst->data[0];
 
 	s_CurrentAPI->EndModifyTexture(m_pTextureHandle, m_Width, m_Height, m_pFrameDst->linesize[0], textureDataPtr );
-
+	
 	return 0;
 }

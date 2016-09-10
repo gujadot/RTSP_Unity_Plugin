@@ -116,8 +116,9 @@ extern "C" void* UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API AddMediaSinkToStream
 }
 */
 
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTextureAsRTSPSink(void* uri,void* texture_handle, int h, int w)
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTextureAsRTSPSink(void* texture_handle, int h, int w)
 {
-	ffmpegClassPtr.SetRtspStream((char*)uri);
-	ffmpegClassPtr.getStream()->setMediaSink(new rtsp_unity_plugin::UnityTextureSink(texture_handle, "texture", h, w));
+	ffmpegClassPtr.SetRtspStream("rtsp://localhost:8554/stream");//
+	rtsp_unity_plugin::UnityTextureSink* sink = new rtsp_unity_plugin::UnityTextureSink(texture_handle, "texture", h, w);
+	ffmpegClassPtr.getStream()->setMediaSink(sink);
 }

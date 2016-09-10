@@ -17,8 +17,19 @@ void rtsp_unity_plugin::FFMpegClass::InitAvCodec()
 		avcodec_register_all();
 	m_hasInitAvCodec = true;
 }
+void rtsp_unity_plugin::FFMpegClass::InitAvNetwork()
+{
+	if (!m_hasInitAvNetwork)
+		avformat_network_init();
+	m_hasInitAvNetwork = true;
+}
+
+
+
 void rtsp_unity_plugin::FFMpegClass::SetRtspStream(const char * uri)
 {
+	if (m_pStream != NULL)
+		delete m_pStream;
 	m_pStream = new FFMpegRTSPStream(uri);
 }
 void rtsp_unity_plugin::FFMpegClass::ReadFrame()
@@ -32,12 +43,6 @@ void rtsp_unity_plugin::FFMpegClass::AddNewRtspStream(const char * uri)
 	m_vStream.insert(FFMpegRTSPStream(uri));
 }*/
 
-void rtsp_unity_plugin::FFMpegClass::InitAvNetwork()
-{
-	if (!m_hasInitAvNetwork)
-		avformat_network_init();
-	m_hasInitAvNetwork = true;
-}
 
 rtsp_unity_plugin::FFMpegClass::FFMpegClass()
 {

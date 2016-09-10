@@ -70,6 +70,8 @@ int rtsp_unity_plugin::FFMpegRTSPStream::InitStream()
 	// Allocate an AVFrame structure
 	m_pFrameSrc = av_frame_alloc();
 
+	m_hasInit = true;
+	m_isClosed = false;
 
 	return 0;
 }

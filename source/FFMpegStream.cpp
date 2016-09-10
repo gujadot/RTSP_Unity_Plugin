@@ -4,7 +4,9 @@
 
 rtsp_unity_plugin::FFMpegStream::FFMpegStream(const char* uri)
 {
+
 	m_pStreamUri = uri;
+	m_pMediaSink = NULL;
 }
 
 
@@ -40,6 +42,7 @@ int rtsp_unity_plugin::FFMpegStream::addMediaSink(MediaSink &media_sink)
 int rtsp_unity_plugin::FFMpegStream::ReadFrame() 
 {
 	if (m_hasInit && !m_isClosed) {
+
 		if (av_read_frame(m_pFormatCtx, &m_packet) >= 0) {
 			if (m_packet.stream_index == m_VideoStreamIndex) {
 				//Supply raw packet data as input to a decoder.
@@ -52,7 +55,8 @@ int rtsp_unity_plugin::FFMpegStream::ReadFrame()
 					for (std::vector<MediaSink>::iterator it = m_vMediaSink.begin(); it != m_vMediaSink.end(); ++it) {
 						it->WriteVideo(m_pFrameSrc);
 					}*/
-					m_pMediaSink->WriteVideo(m_pFrameSrc);
+					if (m_pMediaSink != NULL)
+						m_pMediaSink->WriteVideo(m_pFrameSrc);
 				}
 			}
 			else if (m_packet.stream_index == m_AudioStreamIndex) {
@@ -61,7 +65,8 @@ int rtsp_unity_plugin::FFMpegStream::ReadFrame()
 				for (std::vector<MediaSink>::iterator it = m_vMediaSink.begin(); it != m_vMediaSink.end(); ++it) {
 					it->WriteAudio(m_pFrameSrc);
 				}*/
-				m_pMediaSink->WriteAudio(m_pFrameSrc);
+				if (m_pMediaSink != NULL)
+					m_pMediaSink->WriteAudio(m_pFrameSrc);
 			}else {
 				// if thie packet is an error, we free the packet
 				av_packet_unref(&m_packet);
