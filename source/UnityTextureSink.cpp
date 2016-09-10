@@ -80,10 +80,14 @@ int rtsp_unity_plugin::UnityTextureSink::WriteVideo(RenderAPI* render_api, AVFra
 		return -2;
 	//TODO adjust time here
 	// Convert the image from its native format to RGB
-	sws_scale(m_pSwsContext,
+	sws_scale(
+		m_pSwsContext,
 		(const uint8_t* const*)Video_frame->data,
-		Video_frame->linesize, 0, m_Height,
-		m_pFrameDst->data, m_pFrameDst->linesize);
+		Video_frame->linesize,
+		0, 
+		Video_frame->height,
+		m_pFrameDst->data, 
+		m_pFrameDst->linesize);
 
 
 	int textureRowPitch;
