@@ -51,8 +51,8 @@ void rtsp_unity_plugin::UnityTextureSink::draw_plasma(RenderAPI* render_api) {
 
 			// Write the texture pixel
 			ptr[0] = vv;
-			ptr[1] = vv;
-			ptr[2] = vv;
+			ptr[1] = 0;
+			ptr[2] = 0;
 			ptr[3] = 127;
 
 			// To next pixel (our pixels are 4 bpp)
@@ -68,7 +68,14 @@ void rtsp_unity_plugin::UnityTextureSink::draw_plasma(RenderAPI* render_api) {
 
 int rtsp_unity_plugin::UnityTextureSink::WriteVideo(RenderAPI* render_api, AVFrame * Video_frame)
 {
+
+	
 	int test = 0;
+
+	//draw_plasma(render_api);
+	//return 0;
+
+
 	if (!m_pTextureHandle)
 		return -2;
 	//TODO adjust time here
@@ -97,15 +104,14 @@ int rtsp_unity_plugin::UnityTextureSink::WriteVideo(RenderAPI* render_api, AVFra
 
 			// Write the texture pixel
 			ptr_dst[0] = ptr_src[0];
-			ptr_dst[1] = ptr_src[0];
-			ptr_dst[2] = ptr_src[0];
+			ptr_dst[1] = ptr_src[1];
+			ptr_dst[2] = ptr_src[2];
 			ptr_dst[3] = 127;
 
 			// To next pixel (our pixels are 4 bpp)
 			ptr_dst += 4;
 			ptr_src += 4;
 		}
-
 		// To next image row
 		dst += textureRowPitch;
 		src += m_pFrameDst->linesize[0];
