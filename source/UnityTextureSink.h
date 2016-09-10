@@ -2,19 +2,8 @@
 #include "MediaSink.h"
 #include "RenderAPI.h"
 
-#include "Unity/IUnityGraphics.h"
-
 
 namespace rtsp_unity_plugin {
-
-	static RenderAPI* s_CurrentAPI = NULL;
-	static UnityGfxRenderer s_DeviceType = kUnityGfxRendererNull;
-
-
-
-
-
-
 
 
 
@@ -32,8 +21,11 @@ namespace rtsp_unity_plugin {
 		~UnityTextureSink();
 
 		int WriteAudio(AVFrame* audio_frame);
-		int WriteVideo(AVFrame* Video_frame);
+		int WriteVideo(RenderAPI* render_api,AVFrame* Video_frame);
+	private:
+		void draw_plasma(RenderAPI * render_api);
 	};
+
 
 
 

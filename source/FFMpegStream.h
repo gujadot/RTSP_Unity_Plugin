@@ -1,14 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include "FFMpegClass.h"
-#include "MediaSink.h"
 #include <string>;
+#include "MediaSink.h"
+
 
 namespace rtsp_unity_plugin {
 	class MediaSink;
-
-
 	class FFMpegStream
 	{
 

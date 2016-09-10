@@ -32,6 +32,9 @@ void rtsp_unity_plugin::FFMpegClass::SetRtspStream(const char * uri)
 		delete m_pStream;
 	m_pStream = new FFMpegRTSPStream(uri);
 }
+// todo delete that : 
+
+
 void rtsp_unity_plugin::FFMpegClass::ReadFrame()
 {
 	if (m_pStream != NULL)
@@ -54,6 +57,9 @@ rtsp_unity_plugin::FFMpegClass::FFMpegClass()
 
 rtsp_unity_plugin::FFMpegClass::~FFMpegClass()
 {
+	if (m_pRenderApi!= NULL) {
+		delete m_pRenderApi;
+	}
 }
 
 rtsp_unity_plugin::FFMpegClass& rtsp_unity_plugin::FFMpegClass::Instance()

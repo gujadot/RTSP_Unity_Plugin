@@ -1,21 +1,22 @@
 #include "PlatformBase.h"
 #include "Unity/IUnityGraphics.h"
-
+#include <assert.h>
 
 #include "FFMpegClass.h"
 #include "UnityTextureSink.h"
-#include <assert.h>
 
 // Frome Example : --------------------------------------------------------------------------
 // SetTimeFromUnity, an example function we export which is called by one of the scripts.
-static float g_Time;
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTimeFromUnity(float t) { g_Time = t; }
+
+rtsp_unity_plugin::FFMpegClass& ffmpegClassPtr = rtsp_unity_plugin::FFMpegClass::Instance();
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTimeFromUnity(float t) { ffmpegClassPtr.setTime(t); }
 
 // --------------------------------------------------------------------------
 // UnitySetInterfaces
 
 static void UNITY_INTERFACE_API OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType);
 
+static UnityGfxRenderer s_DeviceType = kUnityGfxRendererNull;
 static IUnityInterfaces* s_UnityInterfaces = NULL;
 static IUnityGraphics* s_Graphics = NULL;
 
@@ -43,23 +44,24 @@ static void UNITY_INTERFACE_API OnGraphicsDeviceEvent(UnityGfxDeviceEventType ev
 	// Create graphics API implementation upon initialization
 	if (eventType == kUnityGfxDeviceEventInitialize)
 	{
-		assert(rtsp_unity_plugin::s_CurrentAPI == NULL);
-		rtsp_unity_plugin::s_DeviceType = s_Graphics->GetRenderer();
-		rtsp_unity_plugin::s_CurrentAPI = CreateRenderAPI(rtsp_unity_plugin::s_DeviceType);
+		assert(ffmpegClassPtr.getRenderApi() == NULL);
+		s_DeviceType = s_Graphics->GetRenderer();
+		RenderAPI* renderApi = CreateRenderAPI(s_DeviceType);
+		ffmpegClassPtr.SetRenderApi(renderApi);
 	}
 
 	// Let the implementation process the device related events
-	if (rtsp_unity_plugin::s_CurrentAPI)
+	if (ffmpegClassPtr.getRenderApi())
 	{
-		rtsp_unity_plugin::s_CurrentAPI->ProcessDeviceEvent(eventType, s_UnityInterfaces);
+		ffmpegClassPtr.getRenderApi()->ProcessDeviceEvent(eventType, s_UnityInterfaces);
 	}
 
 	// Cleanup graphics API implementation upon shutdown
 	if (eventType == kUnityGfxDeviceEventShutdown)
 	{
-		delete rtsp_unity_plugin::s_CurrentAPI;
-		rtsp_unity_plugin::s_CurrentAPI = NULL;
-		rtsp_unity_plugin::s_DeviceType = kUnityGfxRendererNull;
+		//delete s_CurrentAPI;
+		//s_CurrentAPI = NULL;
+		s_DeviceType = kUnityGfxRendererNull;
 	}
 }
 
@@ -69,14 +71,12 @@ static void UNITY_INTERFACE_API OnGraphicsDeviceEvent(UnityGfxDeviceEventType ev
 // be the integer passed to IssuePluginEvent. In this example, we just ignore
 // that value.
 
-rtsp_unity_plugin::FFMpegClass& ffmpegClassPtr = rtsp_unity_plugin::FFMpegClass::Instance();
-
 
 
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
 	// Unknown / unsupported graphics device type? Do nothing
-	if (rtsp_unity_plugin::s_CurrentAPI == NULL)
+	if (ffmpegClassPtr.getRenderApi() == NULL)
 		return;
 
 	ffmpegClassPtr.ReadFrame();
@@ -120,5 +120,6 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTextureAsRTSPSink(
 {
 	ffmpegClassPtr.SetRtspStream("rtsp://localhost:8554/stream");//
 	rtsp_unity_plugin::UnityTextureSink* sink = new rtsp_unity_plugin::UnityTextureSink(texture_handle, "texture", h, w);
+	//ffmpegClassPtr.SetDummySink(sink);
 	ffmpegClassPtr.getStream()->setMediaSink(sink);
 }

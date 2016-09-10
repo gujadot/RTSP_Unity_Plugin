@@ -1,4 +1,5 @@
 #include "FFMpegStream.h"
+#include "FFMpegClass.h"
 
 
 
@@ -41,6 +42,10 @@ int rtsp_unity_plugin::FFMpegStream::addMediaSink(MediaSink &media_sink)
 */
 int rtsp_unity_plugin::FFMpegStream::ReadFrame() 
 {
+	FFMpegClass& ffmpegClassPtr = FFMpegClass::Instance();
+	//if (m_pMediaSink != NULL)
+	//	m_pMediaSink->WriteVideo(ffmpegClassPtr.getRenderApi(),  NULL);
+	
 	if (m_hasInit && !m_isClosed) {
 
 		if (av_read_frame(m_pFormatCtx, &m_packet) >= 0) {
@@ -51,20 +56,20 @@ int rtsp_unity_plugin::FFMpegStream::ReadFrame()
 				m_frameFinished = avcodec_receive_frame(m_pCodecCtx, m_pFrameSrc);
 				// Did we get a video complete video frame?
 				if (m_frameFinished == 0) {
-					/*
-					for (std::vector<MediaSink>::iterator it = m_vMediaSink.begin(); it != m_vMediaSink.end(); ++it) {
-						it->WriteVideo(m_pFrameSrc);
-					}*/
+					
+					//for (std::vector<MediaSink>::iterator it = m_vMediaSink.begin(); it != m_vMediaSink.end(); ++it) {
+					//	it->WriteVideo(m_pFrameSrc);
+					//}
 					if (m_pMediaSink != NULL)
-						m_pMediaSink->WriteVideo(m_pFrameSrc);
+						m_pMediaSink->WriteVideo(ffmpegClassPtr.getRenderApi(), m_pFrameSrc);
 				}
 			}
 			else if (m_packet.stream_index == m_AudioStreamIndex) {
 				// TODO Handle the audio output!!!
-				/*
-				for (std::vector<MediaSink>::iterator it = m_vMediaSink.begin(); it != m_vMediaSink.end(); ++it) {
-					it->WriteAudio(m_pFrameSrc);
-				}*/
+				
+				//for (std::vector<MediaSink>::iterator it = m_vMediaSink.begin(); it != m_vMediaSink.end(); ++it) {
+				//	it->WriteAudio(m_pFrameSrc);
+				//}
 				if (m_pMediaSink != NULL)
 					m_pMediaSink->WriteAudio(m_pFrameSrc);
 			}else {
@@ -75,6 +80,7 @@ int rtsp_unity_plugin::FFMpegStream::ReadFrame()
 		else {
 			CloseStream();
 		}
+		return 2;
 	}
 	else return 0;
 }

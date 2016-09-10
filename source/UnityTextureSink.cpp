@@ -1,12 +1,11 @@
 #include "UnityTextureSink.h"
-
-
-
+#include "FFMpegClass.h"
 
 rtsp_unity_plugin::UnityTextureSink::UnityTextureSink(void* textureHandle, const char * id, int height, int width)
-	: MediaSink(height,width, AV_PIX_FMT_YUYV422)
+	: MediaSink(height,width, AV_PIX_FMT_RGBA)
 {
 	//AV_PIX_FMT_ARGB != textureformat ARGB32
+	//AV_PIX_FMT_RGBA ?= textureformat RGBA32
 	m_id = id;
 	m_pTextureHandle = textureHandle;
 
@@ -21,14 +20,57 @@ int rtsp_unity_plugin::UnityTextureSink::WriteAudio(AVFrame * audio_frame)
 	//TODO : not yet implemented
 	return 0;
 }
+void rtsp_unity_plugin::UnityTextureSink::draw_plasma(RenderAPI* render_api) {
 
-int rtsp_unity_plugin::UnityTextureSink::WriteVideo(AVFrame * Video_frame)
-{
-	
-	// get all information need 
+	int width = m_Width;
+	int height = m_Height;
 	if (!m_pTextureHandle)
-		return -1;
+		return;
 
+	int textureRowPitch;
+	void* textureDataPtr = (unsigned char*)render_api->BeginModifyTexture(m_pTextureHandle, width, height, &textureRowPitch);
+	if (!textureDataPtr)
+		return;
+
+	rtsp_unity_plugin::FFMpegClass& ffmpegClassPtr = rtsp_unity_plugin::FFMpegClass::Instance();
+	const float t = ffmpegClassPtr.getTime() *4.0f;
+
+	unsigned char* dst = (unsigned char*)textureDataPtr;
+	for (int y = 0; y < height; ++y)
+	{
+		unsigned char* ptr = dst;
+		for (int x = 0; x < width; ++x)
+		{
+			// Simple "plasma effect": several combined sine waves
+			int vv = int(
+				(127.0f + (127.0f * sinf(x / 7.0f + t))) +
+				(127.0f + (127.0f * sinf(y / 5.0f - t))) +
+				(127.0f + (127.0f * sinf((x + y) / 6.0f - t))) +
+				(127.0f + (127.0f * sinf(sqrtf(float(x*x + y*y)) / 4.0f - t)))
+				) / 4;
+
+			// Write the texture pixel
+			ptr[0] = vv;
+			ptr[1] = vv;
+			ptr[2] = vv;
+			ptr[3] = 127;
+
+			// To next pixel (our pixels are 4 bpp)
+			ptr += 4;
+		}
+
+		// To next image row
+		dst += textureRowPitch;
+	}
+	render_api->EndModifyTexture(m_pTextureHandle, m_Width, m_Height, textureRowPitch, textureDataPtr);
+
+}
+
+int rtsp_unity_plugin::UnityTextureSink::WriteVideo(RenderAPI* render_api, AVFrame * Video_frame)
+{
+	int test = 0;
+	if (!m_pTextureHandle)
+		return -2;
 	//TODO adjust time here
 	// Convert the image from its native format to RGB
 	sws_scale(m_pSwsContext,
@@ -38,13 +80,40 @@ int rtsp_unity_plugin::UnityTextureSink::WriteVideo(AVFrame * Video_frame)
 
 
 	int textureRowPitch;
-	void* textureDataPtr = (unsigned char*)s_CurrentAPI->BeginModifyTexture(m_pTextureHandle, m_Width, m_Height, &textureRowPitch);
+	void* textureDataPtr = (uint8_t*)render_api->BeginModifyTexture(m_pTextureHandle, m_Width, m_Height, &textureRowPitch);
 	if (!textureDataPtr)
 		return -1;
 
-	textureDataPtr = (void*)m_pFrameDst->data[0];
+	unsigned char* dst = (unsigned char*)textureDataPtr;
+	unsigned char* src = (unsigned char*)m_pFrameDst->data[0];
 
-	s_CurrentAPI->EndModifyTexture(m_pTextureHandle, m_Width, m_Height, m_pFrameDst->linesize[0], textureDataPtr );
+	for (int y = 0; y < m_Height; ++y)
+	{
+		unsigned char* ptr_dst = dst;
+		unsigned char* ptr_src = src;
+		for (int x = 0; x < m_Width; ++x)
+		{
+			// Simple "plasma effect": several combined sine waves
+
+			// Write the texture pixel
+			ptr_dst[0] = ptr_src[0];
+			ptr_dst[1] = ptr_src[0];
+			ptr_dst[2] = ptr_src[0];
+			ptr_dst[3] = 127;
+
+			// To next pixel (our pixels are 4 bpp)
+			ptr_dst += 4;
+			ptr_src += 4;
+		}
+
+		// To next image row
+		dst += textureRowPitch;
+		src += m_pFrameDst->linesize[0];
+	}
+
+	render_api->EndModifyTexture(m_pTextureHandle, m_Width, m_Height, textureRowPitch, textureDataPtr );
 	
-	return 0;
+	return test;
+
 }
+
