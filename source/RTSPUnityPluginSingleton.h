@@ -12,6 +12,10 @@ namespace rtsp_unity_plugin {
 	class FFMpegStream;
 	class MediaSink;
 
+
+
+
+
 	class RTSPPluginSingleton
 	{
 
@@ -45,6 +49,14 @@ namespace rtsp_unity_plugin {
 
 		inline void setTime(float time) { m_time = time; }
 		inline float getTime() { return m_time; }
+
+		char* MakeStringCopy(const char* string) {
+			if (string == NULL) return NULL;
+			int length = strlen(string) + 1;
+			char* res = new char[length];
+			strcpy_s(res, length , string);
+			return res;
+		}
 
 	private:
 

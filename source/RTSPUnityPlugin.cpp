@@ -8,8 +8,8 @@
 // Frome Example : --------------------------------------------------------------------------
 // SetTimeFromUnity, an example function we export which is called by one of the scripts.
 
-rtsp_unity_plugin::RTSPPluginSingleton& ffmpegClassPtr = rtsp_unity_plugin::RTSPPluginSingleton::Instance();
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTimeFromUnity(float t) { ffmpegClassPtr.setTime(t); }
+rtsp_unity_plugin::RTSPPluginSingleton& pluginSinglet = rtsp_unity_plugin::RTSPPluginSingleton::Instance();
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTimeFromUnity(float t) { pluginSinglet.setTime(t); }
 
 // --------------------------------------------------------------------------
 // UnitySetInterfaces
@@ -44,16 +44,16 @@ static void UNITY_INTERFACE_API OnGraphicsDeviceEvent(UnityGfxDeviceEventType ev
 	// Create graphics API implementation upon initialization
 	if (eventType == kUnityGfxDeviceEventInitialize)
 	{
-		assert(ffmpegClassPtr.getRenderApi() == NULL);
+		assert(pluginSinglet.getRenderApi() == NULL);
 		s_DeviceType = s_Graphics->GetRenderer();
 		RenderAPI* renderApi = CreateRenderAPI(s_DeviceType);
-		ffmpegClassPtr.SetRenderApi(renderApi);
+		pluginSinglet.SetRenderApi(renderApi);
 	}
 
 	// Let the implementation process the device related events
-	if (ffmpegClassPtr.getRenderApi())
+	if (pluginSinglet.getRenderApi())
 	{
-		ffmpegClassPtr.getRenderApi()->ProcessDeviceEvent(eventType, s_UnityInterfaces);
+		pluginSinglet.getRenderApi()->ProcessDeviceEvent(eventType, s_UnityInterfaces);
 	}
 
 	// Cleanup graphics API implementation upon shutdown
@@ -76,10 +76,10 @@ static void UNITY_INTERFACE_API OnGraphicsDeviceEvent(UnityGfxDeviceEventType ev
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
 	// Unknown / unsupported graphics device type? Do nothing
-	if (ffmpegClassPtr.getRenderApi() == NULL)
+	if (pluginSinglet.getRenderApi() == NULL)
 		return;
 
-	ffmpegClassPtr.ReadFrame();
+	pluginSinglet.ReadFrame();
 }
 // --------------------------------------------------------------------------
 // GetRenderEventFunc, an example function we export which is used to get a rendering event callback function.
@@ -116,10 +116,11 @@ extern "C" void* UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API AddMediaSinkToStream
 }
 */
 
-extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTextureAsRTSPSink(void* texture_handle, int h, int w)
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTextureAsRTSPSink(const char* rtsp_uri,void* texture_handle, int h, int w)
 {
-	ffmpegClassPtr.SetRtspStream("rtsp://localhost:8554/stream");//
+	char* uri = pluginSinglet.MakeStringCopy(rtsp_uri);
+	pluginSinglet.SetRtspStream(uri);//"rtsp://localhost:8554/stream"
 	rtsp_unity_plugin::UnityTextureSink* sink = new rtsp_unity_plugin::UnityTextureSink(texture_handle, "texture", h, w);
 	//ffmpegClassPtr.SetDummySink(sink);
-	ffmpegClassPtr.getStream()->setMediaSink(sink);
+	pluginSinglet.getStream()->setMediaSink(sink);
 }
